@@ -1,0 +1,23 @@
+{
+  "canisters": {
+    "service_example": {
+      "main": "test/service_example.mo",
+      "type": "motoko"
+    },
+    "consumer_example": {
+      "main": "test/consumer_example.mo",
+      "type": "motoko"
+    },
+    "test_runner_kyc": {
+      "main": "test/test_runner_kyc.mo",
+      "type": "motoko"
+    }
+  },
+  "defaults": {
+    "build": {
+      "packtool": "vessel sources"
+    }
+  },
+  "dfx": "0.13.1",
+  "version": 1
+}
