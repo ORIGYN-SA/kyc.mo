@@ -1,4 +1,5 @@
 import CandyTypes "mo:candy_0_2_0/types";
+import Map "mo:map_7_0_0/Map";
 
 module {
 
@@ -69,7 +70,10 @@ public type KYCResultFuture = {
     kyc_cansiter : Principal;
     time : ?(() -> Int);
     timeout : ?Int;
+    cache : ?CacheMap;
   };
+
+  public type CacheMap = Map.Map<KYCRequest, KYCResultFuture>;
 
   public type KYCRequestCallBack = (KYCResult) -> ();
 

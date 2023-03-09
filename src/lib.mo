@@ -109,8 +109,7 @@ class kyc(_init_args : Types.KYCClassInitArgs){
 
   public let kyc_map_tool = (kyc_request_hash, kyc_request_eq);
 
-  let cache = Map.new<Types.KYCRequest, Types.KYCResultFuture>();
-
+  let cache = Option.get(_init_args.cache, Map.new<Types.KYCRequest, Types.KYCResultFuture>());
 
   public func get_kyc_from_cache(request : Types.KYCRequest) : ?Types.KYCResultFuture{
     D.print("getting cache" # debug_show(request));
