@@ -17,14 +17,16 @@ module {
     amount: ?Nat;
 };
 
+
+
 public type KYCResultFuture = {
-  resultFuture: async KYCResult;
+  result: KYCResult;
   timeout: Int;
 };
 
   public type TokenSpec = {
-    #ic: ICTokenSpec;
-    #extensible : CandyTypes.CandyShared; //#Class
+    #IC: ICTokenSpec;
+    #Extensible : CandyTypes.CandyShared; //#Class
   };
 
   public type ICTokenSpec = {
@@ -43,12 +45,12 @@ public type KYCResultFuture = {
   }; 
 
   public type KYCRequest = {
-    counterparty: Account;
+    counterparty: KYCAccount;
     token: ?TokenSpec;
     amount: ?Nat;
   };
 
-  type Account = {
+  public type KYCAccount = {
     #ICRC1: {
       owner: Principal;
       subaccount: ?[Nat8];
@@ -58,13 +60,15 @@ public type KYCResultFuture = {
   };
 
   public type KYCNotification =  {
-    counterparty: Account;
+    counterparty: KYCAccount;
     token: ?TokenSpec;
     amount: ?Nat;
   };
 
   public type KYCClassInitArgs = {
     kyc_cansiter : Principal;
+    time : ?(() -> Int);
+    timeout : ?Int;
   };
 
   public type KYCRequestCallBack = (KYCResult) -> ();
