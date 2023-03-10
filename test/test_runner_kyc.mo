@@ -89,7 +89,10 @@ shared (deployer) actor class test_runner() = this {
 
         // test that it can return a syncrynous call
 
-        let result = await* kyc.run_kyc({good_request with canister = Principal.fromActor(service_actor)}, null);
+        let result = switch(await* kyc.run_kyc({good_request with canister = Principal.fromActor(service_actor)}, null)){
+          case(#ok(val)) val;
+          case(#err(err)) D.trap("error occured with service in test process");
+        };
 
         var callback_result : KYCTypes.KYCResult = {kyc = #Fail; aml = #Fail; token = null; amount = null};
 
@@ -106,8 +109,6 @@ shared (deployer) actor class test_runner() = this {
         //test that cache is used
 
         let beforeCallCounter = await service_actor.get_counter();
-
-
 
         let suite = S.suite("test kyc deposit", [
 

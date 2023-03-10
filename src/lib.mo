@@ -1,9 +1,11 @@
 import Types "types";
 
 import D "mo:base/Debug";
+import Error "mo:base/Error";
 import Option "mo:base/Option";
 import Principal "mo:base/Principal";
 import Nat32 "mo:base/Nat32";
+import Result "mo:base/Result";
 import Time "mo:base/Time";
 import Prim "mo:prim";
 
@@ -135,25 +137,30 @@ class kyc(_init_args : Types.KYCClassInitArgs){
 
   
 
-  public func run_kyc(request : Types.KYCRequest, callback: ?Types.KYCRequestCallBack) : async* Types.KYCResult {
+  public func run_kyc(request : Types.KYCRequest, callback: ?Types.KYCRequestCallBack) : async* Result.Result<Types.KYCResult, Text> {
 
     //check cache
     let kyc_canister : Types.Service = actor(Principal.toText(request.canister));
 
     let ?x = get_kyc_from_cache(request) else {
-      let result = await kyc_canister.icrc17_kyc_request(request);
+      let result = try{
+         await kyc_canister.icrc17_kyc_request(request);
+      } catch (err){
+        return #err(Error.message(err));
+      };
+
       let store : Types.KYCResultFuture = {result = result; timeout =  time() + timeout};
       D.print("putting cache" # debug_show((request, store)));
       ignore Map.put(cache, kyc_map_tool, request, store);
 
-      let ?a_callback = callback else return result;
+      let ?a_callback = callback else return #ok(result);
       a_callback(result);
 
-      return result;
+      return #ok(result);
     };
 
     //cached doesn't call callback
-    return x.result;
+    return #ok(x.result);
   };
 
   public func notify(request : Types.KYCRequest, usage: Types.KYCNotification) : async* () {
