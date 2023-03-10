@@ -62,6 +62,7 @@ shared (deployer) actor class test_runner() = this {
     };
 
     let good_request = {
+      
       counterparty = #ICRC1{
         owner = Principal.fromText("rkp4c-7iaaa-aaaaa-aaaca-cai");
         subaccount = null;
@@ -83,12 +84,12 @@ shared (deployer) actor class test_runner() = this {
         let service_actor = await service.kyc_service(null);
         
 
-        let kyc = KYC.kyc({kyc_cansiter = Principal.fromActor(service_actor); timeout=null; time = null; cache=null});
+        let kyc = KYC.kyc({kyc_canister = Principal.fromActor(service_actor); timeout=null; time = null; cache=null});
 
 
         // test that it can return a syncrynous call
 
-        let result = await* kyc.run_kyc(good_request, null);
+        let result = await* kyc.run_kyc({good_request with canister = Principal.fromActor(service_actor)}, null);
 
         var callback_result : KYCTypes.KYCResult = {kyc = #Fail; aml = #Fail; token = null; amount = null};
 
@@ -97,7 +98,7 @@ shared (deployer) actor class test_runner() = this {
         };
         
         //test that we can use the callback
-        let call_with_callback = kyc.run_kyc(good_request, ?callback);
+        let call_with_callback = kyc.run_kyc({good_request with canister = Principal.fromActor(service_actor)}, ?callback);
 
         ignore await take_a_hot_minute();
         ignore await take_a_hot_minute();
@@ -137,23 +138,23 @@ shared (deployer) actor class test_runner() = this {
 
         let service_actor = await service.kyc_service(null);
 
-        let kyc = KYC.kyc({kyc_cansiter = Principal.fromActor(service_actor); timeout = null; time = ?get_current_time;cache=null});
+        let kyc = KYC.kyc({kyc_canister = Principal.fromActor(service_actor); timeout = null; time = ?get_current_time;cache=null});
 
         // test that it can return a syncrynous call
 
-        let result = await* kyc.run_kyc(good_request, null);
+        let result = await* kyc.run_kyc({good_request with canister = Principal.fromActor(service_actor)}, null);
 
         //test that cache is used
 
         let beforeCallCounter = await service_actor.get_counter();
 
-        let result2 = await* kyc.run_kyc(good_request, null);
+        let result2 = await* kyc.run_kyc({good_request with canister = Principal.fromActor(service_actor)}, null);
 
         let afterCallCounter = await service_actor.get_counter();
 
         add_current_time(two_days);
 
-        let result3 = await* kyc.run_kyc(good_request, null);
+        let result3 = await* kyc.run_kyc({good_request with canister = Principal.fromActor(service_actor)}, null);
 
         let afterDaysCallCounter = await service_actor.get_counter();
 
@@ -205,12 +206,14 @@ shared (deployer) actor class test_runner() = this {
 
         var service_actor = await service.kyc_service(?2);
 
-        let kyc = KYC.kyc({kyc_cansiter = Principal.fromActor(service_actor); timeout = null; time = ?get_current_time; cache=null});
+        let kyc = KYC.kyc({kyc_canister = Principal.fromActor(service_actor); timeout = null; time = ?get_current_time; cache=null});
 
         // test that notify is called
         let beforeCallCounter = await service_actor.get_notification_counter();
 
-        let result = await* kyc.notify(a_request, a_notification);
+        let a_request_full = {a_request with canister = Principal.fromActor(service_actor)};
+
+        let result = await* kyc.notify(a_request_full, a_notification);
 
         let afterCallCounter = await service_actor.get_notification_counter();
 
@@ -218,23 +221,23 @@ shared (deployer) actor class test_runner() = this {
 
         D.print("about to call KYC");
 
-        let result3 = await* kyc.run_kyc(a_request, null);
+        let result3 = await* kyc.run_kyc(a_request_full, null);
 
          D.print("KYC done");
 
-        let oldcache = kyc.get_kyc_from_cache(a_request);
+        let oldcache = kyc.get_kyc_from_cache(a_request_full);
 
         D.print("oldcache 2");
 
-        let oldcache2 = kyc.get_kyc_from_cache(a_request);
+        let oldcache2 = kyc.get_kyc_from_cache(a_request_full);
 
         D.print("Notifying");
 
-        let result4 = await* kyc.notify(a_request, a_notification);
+        let result4 = await* kyc.notify(a_request_full, a_notification);
 
         D.print("Getting final cache");
 
-        let newcache = kyc.get_kyc_from_cache(a_request);
+        let newcache = kyc.get_kyc_from_cache(a_request_full);
 
         let suite = S.suite("test kyc deposit", [
             S.test("fail if notification isn't initialized", beforeCallCounter, M.equals<Nat>(T.nat(0))),

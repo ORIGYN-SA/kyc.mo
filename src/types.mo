@@ -46,6 +46,7 @@ public type KYCResultFuture = {
   }; 
 
   public type KYCRequest = {
+    canister : Principal;
     counterparty: KYCAccount;
     token: ?TokenSpec;
     amount: ?Nat;
@@ -67,7 +68,7 @@ public type KYCResultFuture = {
   };
 
   public type KYCClassInitArgs = {
-    kyc_cansiter : Principal;
+    kyc_canister : Principal;
     time : ?(() -> Int);
     timeout : ?Int;
     cache : ?CacheMap;

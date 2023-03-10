@@ -14,13 +14,17 @@ import Map "mo:map_7_0_0/Map";
 
 class kyc(_init_args : Types.KYCClassInitArgs){ 
 
-  let kyc_canister : Types.Service = actor(Principal.toText(_init_args.kyc_cansiter));
+  let kyc_canister : Types.Service = actor(Principal.toText(_init_args.kyc_canister));
   let time = Option.get(_init_args.time, Time.now);
   let timeout = Option.get(_init_args.timeout, 60 * 60 *24 * 1000000000 : Int); 
 
   
   public func kyc_request_hash(x : Types.KYCRequest) : Nat {
-    var accountHash = switch(x.counterparty){
+
+    var accountHash = Principal.hash(x.canister);
+
+
+    accountHash +%= switch(x.counterparty){
       case(#ICRC1(account)){
         var val = Principal.hash(account.owner);
         let amount = switch(account.subaccount){
@@ -68,6 +72,9 @@ class kyc(_init_args : Types.KYCClassInitArgs){
   };
 
   public func kyc_request_eq(x : Types.KYCRequest, y : Types.KYCRequest) : Bool {
+    let canister_result = (x.canister == y.canister);
+    if(canister_result == false) return false;
+
     let account_result = switch(x.counterparty, y.counterparty){
       case(#ICRC1(x), #ICRC1(y)){
         x.owner == y.owner and x.subaccount == y.subaccount;
