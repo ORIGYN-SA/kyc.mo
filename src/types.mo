@@ -68,7 +68,6 @@ public type KYCResultFuture = {
   };
 
   public type KYCClassInitArgs = {
-    kyc_canister : Principal;
     time : ?(() -> Int);
     timeout : ?Int;
     cache : ?CacheMap;

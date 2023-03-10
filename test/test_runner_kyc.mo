@@ -84,7 +84,7 @@ shared (deployer) actor class test_runner() = this {
         let service_actor = await service.kyc_service(null);
         
 
-        let kyc = KYC.kyc({kyc_canister = Principal.fromActor(service_actor); timeout=null; time = null; cache=null});
+        let kyc = KYC.kyc({timeout=null; time = null; cache=null});
 
 
         // test that it can return a syncrynous call
@@ -138,7 +138,7 @@ shared (deployer) actor class test_runner() = this {
 
         let service_actor = await service.kyc_service(null);
 
-        let kyc = KYC.kyc({kyc_canister = Principal.fromActor(service_actor); timeout = null; time = ?get_current_time;cache=null});
+        let kyc = KYC.kyc({timeout = null; time = ?get_current_time;cache=null});
 
         // test that it can return a syncrynous call
 
@@ -206,7 +206,7 @@ shared (deployer) actor class test_runner() = this {
 
         var service_actor = await service.kyc_service(?2);
 
-        let kyc = KYC.kyc({kyc_canister = Principal.fromActor(service_actor); timeout = null; time = ?get_current_time; cache=null});
+        let kyc = KYC.kyc({timeout = null; time = ?get_current_time; cache=null});
 
         // test that notify is called
         let beforeCallCounter = await service_actor.get_notification_counter();

@@ -14,7 +14,6 @@ import Map "mo:map_7_0_0/Map";
 
 class kyc(_init_args : Types.KYCClassInitArgs){ 
 
-  let kyc_canister : Types.Service = actor(Principal.toText(_init_args.kyc_canister));
   let time = Option.get(_init_args.time, Time.now);
   let timeout = Option.get(_init_args.timeout, 60 * 60 *24 * 1000000000 : Int); 
 
@@ -139,6 +138,7 @@ class kyc(_init_args : Types.KYCClassInitArgs){
   public func run_kyc(request : Types.KYCRequest, callback: ?Types.KYCRequestCallBack) : async* Types.KYCResult {
 
     //check cache
+    let kyc_canister : Types.Service = actor(Principal.toText(request.canister));
 
     let ?x = get_kyc_from_cache(request) else {
       let result = await kyc_canister.icrc17_kyc_request(request);
@@ -186,6 +186,8 @@ class kyc(_init_args : Types.KYCClassInitArgs){
         D.print("didn't find cache to update" # debug_show(usage.amount, get_kyc_from_cache(request), request));
       };
     };
+    
+    let kyc_canister : Types.Service = actor(Principal.toText(request.canister));
 
     //send notification
     let result = kyc_canister.icrc17_kyc_notification(request);
