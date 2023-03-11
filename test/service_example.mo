@@ -28,11 +28,11 @@ shared (deployer) actor class kyc_service(a_scenario : ?Nat) = this {
         case(#ICRC1(account)){
           if(account.owner == Principal.fromText("rkp4c-7iaaa-aaaaa-aaaca-cai") and account.subaccount == null){
             scenario += 1;
-            return {kyc = #Pass; aml = #Pass; token = null; amount = null}
+            return {kyc = #Pass; aml = #Pass; token = null; amount = null; message=?"pass"}
           };
         };
         case(_){
-          return {kyc = #Fail; aml = #Fail; token = null; amount = null};
+          return {kyc = #Fail; aml = #Fail; token = null; amount = null; message=?"fail"};
         }
       };
     };
@@ -42,11 +42,11 @@ shared (deployer) actor class kyc_service(a_scenario : ?Nat) = this {
         case(#ICRC1(account)){
           if(account.owner == Principal.fromText("rkp4c-7iaaa-aaaaa-aaaca-cai") and account.subaccount == null){
             scenario += 1;
-            return {kyc = #Pass; aml = #Pass; token = null; amount = null}
+            return {kyc = #Pass; aml = #Pass; token = null; amount = null; message=?"pass"}
           };
         };
         case(_){
-          return {kyc = #Fail; aml = #Fail; token = null; amount = null};
+          return {kyc = #Fail; aml = #Fail; token = null; amount = null; message=?"fail"};
         }
       };
     };
@@ -65,18 +65,19 @@ shared (deployer) actor class kyc_service(a_scenario : ?Nat) = this {
               fee = ?200000
             });
             amount = ?2500000000;
+            message=?"pass"
             }
           };
         };
         case(_){
-          return {kyc = #Fail; aml = #Fail; token = null; amount = null};
+          return {kyc = #Fail; aml = #Fail; token = null; amount = null; message=?"fail"};
         }
       };
     };
 
 
     D.trap("Nothing handled");
-    return {kyc = #Fail; aml = #Fail; token = null; amount = null};
+    return {kyc = #Fail; aml = #Fail; token = null; amount = null; message=?"nothing handled"};
   };
 
 

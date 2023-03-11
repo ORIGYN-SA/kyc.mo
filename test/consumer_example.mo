@@ -17,7 +17,7 @@ shared (deployer) actor class kyc_service(a_counter : ?Nat) = this {
 
 
     D.trap("Nothing handled");
-    return {kyc = #Fail; aml = #Fail; token = null; amount = null};
+    return {kyc = #Fail; aml = #Fail; token = null; amount = null; message=?"nothing handled"};
   };
 
 }

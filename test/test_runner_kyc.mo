@@ -94,7 +94,7 @@ shared (deployer) actor class test_runner() = this {
           case(#err(err)) D.trap("error occured with service in test process");
         };
 
-        var callback_result : KYCTypes.KYCResult = {kyc = #Fail; aml = #Fail; token = null; amount = null};
+        var callback_result : KYCTypes.KYCResult = {kyc = #Fail; aml = #Fail; token = null; amount = null; message=?"fail"};
 
         let callback = func(result : KYCTypes.KYCResult): (){
           callback_result := result;

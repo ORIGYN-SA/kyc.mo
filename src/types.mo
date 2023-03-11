@@ -16,6 +16,7 @@ module {
     };
     token: ?TokenSpec;
     amount: ?Nat;
+    message : ?Text;
 };
 
 
