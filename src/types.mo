@@ -46,11 +46,19 @@ public type KYCResultFuture = {
     };
   }; 
 
+  public type KYCCanisterRequest = {
+    counterparty: KYCAccount;
+    token: ?TokenSpec;
+    amount: ?Nat;
+    extensible: ?CandyTypes.CandyShared;
+  };
+
   public type KYCRequest = {
     canister : Principal;
     counterparty: KYCAccount;
     token: ?TokenSpec;
     amount: ?Nat;
+    extensible: ?CandyTypes.CandyShared;
   };
 
   public type KYCAccount = {
@@ -79,7 +87,7 @@ public type KYCResultFuture = {
   public type KYCRequestCallBack = (KYCResult) -> ();
 
   public type Service = actor {
-    icrc17_kyc_request : (KYCRequest) -> async KYCResult;
+    icrc17_kyc_request : (KYCCanisterRequest) -> async KYCResult;
     icrc17_kyc_notification : (KYCNotification) -> (); //one shot
   };
 

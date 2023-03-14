@@ -9,7 +9,7 @@ shared (deployer) actor class kyc_service(a_counter : ?Nat) = this {
     case(?val) val;
   };
 
-  public shared func icrc17_kyc_request(request : Types.KYCRequest) : async Types.KYCResult {
+  public shared func icrc17_kyc_request(request : Types.KYCCanisterRequest) : async Types.KYCResult {
 
     if(counter == 0){
       D.trap("Counter is 0");

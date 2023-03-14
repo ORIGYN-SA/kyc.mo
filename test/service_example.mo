@@ -21,7 +21,8 @@ shared (deployer) actor class kyc_service(a_scenario : ?Nat) = this {
     return notification_counter;
   };
 
-  public shared func icrc17_kyc_request(request : Types.KYCRequest) : async Types.KYCResult {
+  public shared func icrc17_kyc_request(request : Types.KYCCanisterRequest) : async Types.KYCResult {
+    D.print("in kyc_request");
     counter += 1;
     if(scenario == 0){
       switch(request.counterparty){
@@ -38,6 +39,7 @@ shared (deployer) actor class kyc_service(a_scenario : ?Nat) = this {
     };
 
     if(scenario == 1){
+      D.print("1");
       switch(request.counterparty){
         case(#ICRC1(account)){
           if(account.owner == Principal.fromText("rkp4c-7iaaa-aaaaa-aaaca-cai") and account.subaccount == null){
@@ -52,6 +54,7 @@ shared (deployer) actor class kyc_service(a_scenario : ?Nat) = this {
     };
 
     if(scenario == 2){
+       D.print("2");
       switch(request.counterparty){
         case(#ICRC1(account)){
           if(account.owner == Principal.fromText("rkp4c-7iaaa-aaaaa-aaaca-cai") and account.subaccount == null){

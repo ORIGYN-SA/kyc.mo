@@ -69,6 +69,7 @@ shared (deployer) actor class test_runner() = this {
       };
       token = null;
       amount = null;
+      extensible = null;
     };
 
     public shared func take_a_hot_minute() : async Bool{
@@ -199,6 +200,7 @@ shared (deployer) actor class test_runner() = this {
         fee = ?200000
       });
       amount = ?2500000000;
+      extensible = null;
     };
 
 
@@ -212,7 +214,7 @@ shared (deployer) actor class test_runner() = this {
         // test that notify is called
         let beforeCallCounter = await service_actor.get_notification_counter();
 
-        let a_request_full = {a_request with canister = Principal.fromActor(service_actor)};
+        let a_request_full : KYCTypes.KYCRequest = {a_request with canister = Principal.fromActor(service_actor)};
 
         let result = await* kyc.notify(a_request_full, a_notification);
 
@@ -220,27 +222,27 @@ shared (deployer) actor class test_runner() = this {
 
         //test that cache is updated
 
-        D.print("about to call KYC");
+        D.print("about to call KYC" # debug_show(a_request_full));
 
         let result3 = await* kyc.run_kyc(a_request_full, null);
 
-         D.print("KYC done");
+         D.print("KYC done" # debug_show(result3));
 
         let oldcache = kyc.get_kyc_from_cache(a_request_full);
 
-        D.print("oldcache 2");
+        D.print("oldcache 2" # debug_show(oldcache));
 
         let oldcache2 = kyc.get_kyc_from_cache(a_request_full);
 
-        D.print("Notifying");
+        D.print("Notifying" # debug_show(oldcache2));
 
         let result4 = await* kyc.notify(a_request_full, a_notification);
 
-        D.print("Getting final cache");
+        D.print("Getting final cache" # debug_show(result4));
 
         let newcache = kyc.get_kyc_from_cache(a_request_full);
 
-        let suite = S.suite("test kyc deposit", [
+        let suite = S.suite("test Notification", [
             S.test("fail if notification isn't initialized", beforeCallCounter, M.equals<Nat>(T.nat(0))),
             S.test("fail if notification isn't recieved", afterCallCounter, M.equals<Nat>(T.nat(1))),
             S.test("fail if cache isnt set", switch(oldcache){

@@ -24,7 +24,6 @@ class kyc(_init_args : Types.KYCClassInitArgs){
 
     var accountHash = Principal.hash(x.canister);
 
-
     accountHash +%= switch(x.counterparty){
       case(#ICRC1(account)){
         var val = Principal.hash(account.owner);
@@ -68,6 +67,13 @@ class kyc(_init_args : Types.KYCClassInitArgs){
 
     accountHash +%= tokenHash;
     accountHash +%= amountHash;
+
+    switch(x.extensible){
+      case(null){};
+      case(?val){
+        accountHash +%= Nat32.fromNat(Candy.hashShared(val));
+      };
+    };
 
     Nat32.toNat(accountHash);
   };
@@ -113,6 +119,14 @@ class kyc(_init_args : Types.KYCClassInitArgs){
       };
       case(_, _) return false;
     };
+
+    switch(x.extensible, y.extensible){
+      case(null, null) return true;
+      case(?x, ?y){
+       return Candy.eqShared(x, y);
+      };
+      case(_, _) return false;
+    };
   };
 
   public let kyc_map_tool = (kyc_request_hash, kyc_request_eq);
@@ -135,17 +149,24 @@ class kyc(_init_args : Types.KYCClassInitArgs){
     ?x;
   };
 
-  
-
   public func run_kyc(request : Types.KYCRequest, callback: ?Types.KYCRequestCallBack) : async* Result.Result<Types.KYCResult, Text> {
 
     //check cache
+     D.print("in run_kyc class");
     let kyc_canister : Types.Service = actor(Principal.toText(request.canister));
 
     let ?x = get_kyc_from_cache(request) else {
       let result = try{
-         await kyc_canister.icrc17_kyc_request(request);
+        
+         D.print("about to await");
+         await kyc_canister.icrc17_kyc_request({
+          counterparty = request.counterparty;
+          token = request.token;
+          amount =request.amount;
+          extensible = request.extensible;
+         });
       } catch (err){
+        D.print("an error " # Error.message(err));
         return #err(Error.message(err));
       };
 
@@ -193,13 +214,20 @@ class kyc(_init_args : Types.KYCClassInitArgs){
         D.print("didn't find cache to update" # debug_show(usage.amount, get_kyc_from_cache(request), request));
       };
     };
-    
+
+    D.print("about to send notification");
     let kyc_canister : Types.Service = actor(Principal.toText(request.canister));
 
+
+    D.print("sending but not awaiting");
     //send notification
-    let result = kyc_canister.icrc17_kyc_notification(request);
+    let result = kyc_canister.icrc17_kyc_notification({
+      counterparty = request.counterparty;
+      extensible = request.extensible;
+      amount = request.amount;
+      token = request.token;
+    });
 
     return;
   };
-
 };
