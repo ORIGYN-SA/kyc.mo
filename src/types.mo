@@ -71,8 +71,6 @@ public type KYCResultFuture = {
   };
 
   public type KYCNotification =  {
-    counterparty: KYCAccount;
-    token: ?TokenSpec;
     amount: ?Nat;
     metadata: ?CandyTypes.CandyShared;
   };

@@ -58,22 +58,22 @@ class kyc(_init_args : Types.KYCClassInitArgs){
       }
     };
 
-    let amountHash = switch(x.amount){
+   /*  let amountHash = switch(x.amount){
       case(null) 0 : Nat32;
       case(?val){
         Prim.intToNat32Wrap(val);
       }
-    };
+    }; */
 
     accountHash +%= tokenHash;
-    accountHash +%= amountHash;
+   /*  accountHash +%= amountHash; */
 
-    switch(x.extensible){
+    /* switch(x.extensible){
       case(null){};
       case(?val){
         accountHash +%= Nat32.fromNat(Candy.hashShared(val));
       };
-    };
+    }; */
 
     Nat32.toNat(accountHash);
   };
@@ -112,21 +112,23 @@ class kyc(_init_args : Types.KYCClassInitArgs){
 
     if(token_result == false) return false;
 
-    switch(x.amount, y.amount){
+    /* switch(x.amount, y.amount){
       case(null, null) return true;
       case(?x, ?y){
        return x == y
       };
       case(_, _) return false;
-    };
+    }; */
 
-    switch(x.extensible, y.extensible){
+    /* switch(x.extensible, y.extensible){
       case(null, null) return true;
       case(?x, ?y){
        return Candy.eqShared(x, y);
       };
       case(_, _) return false;
-    };
+    }; */
+
+    return true;
   };
 
   public let kyc_map_tool = (kyc_request_hash, kyc_request_eq);
@@ -224,7 +226,7 @@ class kyc(_init_args : Types.KYCClassInitArgs){
     let result = kyc_canister.icrc17_kyc_notification({
       counterparty = request.counterparty;
       extensible = request.extensible;
-      amount = request.amount;
+      amount = usage.amount;
       token = request.token;
       metadata = usage.metadata;
     });
