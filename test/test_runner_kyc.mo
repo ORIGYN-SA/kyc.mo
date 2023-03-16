@@ -184,6 +184,7 @@ shared (deployer) actor class test_runner() = this {
         fee = ?200000
       });
       amount = ?500000000;
+      metadata = ?#Nat(64);
     };
 
     let a_request = {

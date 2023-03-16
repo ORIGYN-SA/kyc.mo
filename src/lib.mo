@@ -157,7 +157,7 @@ class kyc(_init_args : Types.KYCClassInitArgs){
 
     let ?x = get_kyc_from_cache(request) else {
       let result = try{
-        
+
          D.print("about to await");
          await kyc_canister.icrc17_kyc_request({
           counterparty = request.counterparty;
@@ -226,6 +226,7 @@ class kyc(_init_args : Types.KYCClassInitArgs){
       extensible = request.extensible;
       amount = request.amount;
       token = request.token;
+      metadata = usage.metadata;
     });
 
     return;

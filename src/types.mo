@@ -74,6 +74,7 @@ public type KYCResultFuture = {
     counterparty: KYCAccount;
     token: ?TokenSpec;
     amount: ?Nat;
+    metadata: ?CandyTypes.CandyShared;
   };
 
   public type KYCClassInitArgs = {
