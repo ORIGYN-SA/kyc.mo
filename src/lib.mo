@@ -172,9 +172,12 @@ class kyc(_init_args : Types.KYCClassInitArgs){
         return #err(Error.message(err));
       };
 
-      let store : Types.KYCResultFuture = {result = result; timeout =  time() + timeout};
-      D.print("putting cache" # debug_show((request, store)));
-      ignore Map.put(cache, kyc_map_tool, request, store);
+      //only cache Passing kyc
+      if(result.kyc == #Pass and result.aml == #Pass){
+        let store : Types.KYCResultFuture = {result = result; timeout =  time() + timeout};
+        D.print("putting cache" # debug_show((request, store)));
+        ignore Map.put(cache, kyc_map_tool, request, store);
+      };
 
       let ?a_callback = callback else return #ok(result);
       a_callback(result);

@@ -115,6 +115,43 @@ shared (deployer) actor class kyc_service(a_scenario : ?Nat) = this {
       };
     };
 
+    if(scenario == 5){
+       D.print("5");
+      switch(request.counterparty){
+        case(#ICRC1(account)){
+          
+            scenario += 1;
+            return {
+              kyc = #Fail; aml = #Fail; 
+              token = request.token;
+              amount = null;
+              message=?"fail"
+            };
+        };
+        case(_){
+          return {kyc = #Fail; aml = #Fail; token = null; amount = null; message=?"fail"};
+        }
+      };
+    };
+
+    if(scenario == 6){
+       D.print("6");
+      switch(request.counterparty){
+        case(#ICRC1(account)){
+         
+            scenario += 1;
+            return {kyc = #Pass; aml = #Pass; token = request.token;
+            amount = ?2500000000;
+            message=?"pass"
+            }
+        
+        };
+        case(_){
+          return {kyc = #Fail; aml = #Fail; token = null; amount = null; message=?"fail"};
+        }
+      };
+    };
+
 
     D.trap("Nothing handled");
     return {kyc = #Fail; aml = #Fail; token = null; amount = null; message=?"nothing handled"};
