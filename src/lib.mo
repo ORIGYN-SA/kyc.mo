@@ -151,22 +151,25 @@ class kyc(_init_args : Types.KYCClassInitArgs){
     ?x;
   };
 
-  public func run_kyc(request : Types.KYCRequest, callback: ?Types.KYCRequestCallBack) : async* Result.Result<Types.KYCResult, Text> {
+  public func run_kyc(request : Types.KYCRequest, callback: ?Types.KYCRequestCallBack) : async* Result.Result<Types.RunKYCResult, Text> {
 
     //check cache
      D.print("in run_kyc class");
     let kyc_canister : Types.Service = actor(Principal.toText(request.canister));
 
+    
+
     let ?x = get_kyc_from_cache(request) else {
       let result = try{
 
          D.print("about to await");
-         await kyc_canister.icrc17_kyc_request({
-          counterparty = request.counterparty;
-          token = request.token;
-          amount =request.amount;
-          extensible = request.extensible;
-         });
+        await kyc_canister.icrc17_kyc_request({
+            counterparty = request.counterparty;
+            token = request.token;
+            amount =request.amount;
+            extensible = request.extensible;
+          });
+    
       } catch (err){
         D.print("an error " # Error.message(err));
         return #err(Error.message(err));
@@ -179,14 +182,14 @@ class kyc(_init_args : Types.KYCClassInitArgs){
         ignore Map.put(cache, kyc_map_tool, request, store);
       };
 
-      let ?a_callback = callback else return #ok(result);
+      let ?a_callback = callback else return #ok({did_async = true; result = result});
       a_callback(result);
 
-      return #ok(result);
+      return #ok({did_async = true;result = result});
     };
 
     //cached doesn't call callback
-    return #ok(x.result);
+    return #ok({did_async = false;result = x.result});
   };
 
   public func notify(request : Types.KYCRequest, usage: Types.KYCNotification) : async* () {

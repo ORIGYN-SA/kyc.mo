@@ -19,6 +19,11 @@ module {
     message : ?Text;
 };
 
+public type RunKYCResult = {
+  did_async: Bool;
+  result: KYCResult;
+};
+
 
 
 public type KYCResultFuture = {

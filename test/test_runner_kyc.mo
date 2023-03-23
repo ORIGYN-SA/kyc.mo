@@ -113,9 +113,9 @@ shared (deployer) actor class test_runner() = this {
 
         let suite = S.suite("test kyc deposit", [
 
-            S.test("fail if good request fails", switch(result.kyc, result.aml){case(#Pass, #Pass){"expected"};case(_, _){
+            S.test("fail if good request fails", switch(result.result.kyc, result.result.aml){case(#Pass, #Pass){"expected"};case(_, _){
                "failed unexpectedly"};}, M.equals<Text>(T.text("expected"))), //ENG-1470
-            S.test("fail if good request fails via callback", switch(result.kyc, result.aml){case(#Pass, #Pass){"expected"};case(_, _){
+            S.test("fail if good request fails via callback", switch(result.result.kyc, result.result.aml){case(#Pass, #Pass){"expected"};case(_, _){
                "failed unexpectedly"};}, M.equals<Text>(T.text("expected"))), //ENG-1470
         ]);
 
