@@ -26,6 +26,11 @@ let additions =
   , version = "v7.0.0"
   , dependencies = [ "base"]
   },
+  { name = "map"
+  , repo = "https://github.com/ZhenyaUsenko/motoko-hash-map"
+  , version = "v7.0.0"
+  , dependencies = [ "base"]
+  },
   { name = "candid"
       , version = "v1.0.1"
       , repo = "https://github.com/gekctek/motoko_candid"
@@ -42,10 +47,15 @@ let additions =
       , dependencies = [] : List Text
       },
        { name = "stable_buffer"
-  , repo = "https://github.com/skilesare/StableBuffer"
-  , version = "v0.2.0"
-  , dependencies = [ "base"]
-  }
+        , repo = "https://github.com/skilesare/StableBuffer"
+        , version = "v0.2.0"
+        , dependencies = [ "base"]
+        },
+        { name = "stablebuffer"
+        , repo = "https://github.com/skilesare/StableBuffer"
+        , version = "v0.2.0"
+        , dependencies = [ "base"]
+        }
   ] : List Package
 let
   {- This is where you can override existing packages in the package-set

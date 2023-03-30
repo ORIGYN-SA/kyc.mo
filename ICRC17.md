@@ -74,6 +74,7 @@ type KYCNotification =
    amount: opt nat;
    counterparty: KYCAccount;
    token: opt TokenSpec;
+   metadata: opt CandyShared
  };
 type KYCAccount = 
  variant {
