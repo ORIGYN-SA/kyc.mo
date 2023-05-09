@@ -19,7 +19,6 @@ class kyc(_init_args : Types.KYCClassInitArgs){
   let time = Option.get(_init_args.time, Time.now);
   let timeout = Option.get(_init_args.timeout, 60 * 60 *24 * 1000000000 : Int); 
 
-  
   public func kyc_request_hash(x : Types.KYCRequest) : Nat {
 
     var accountHash = Principal.hash(x.canister);

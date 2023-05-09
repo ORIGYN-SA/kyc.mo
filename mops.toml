@@ -1,0 +1,13 @@
+[package]
+name = "kyc"
+version = "0.1.0"
+description = "The this library provides a client for interacting with icrc-17 kyc servers."
+repository = "https://github.com/ORIGYN_SA/kyc.mo"
+
+[dependencies]
+base = "0.7.6"
+candy_0_2_0 = "https://github.com/icdevs/candy_library#0.2.0"
+map_7_0_0 = "https://github.com/ZhenyaUsenko/motoko-hash-map#v7.0.0"
+stable_buffer = "https://github.com/skilesare/StableBuffer#v0.2.0"
+map = "https://github.com/ZhenyaUsenko/motoko-hash-map#v7.0.0"
+matchers = "https://github.com/kritzcreek/motoko-matchers#v1.3.0"
