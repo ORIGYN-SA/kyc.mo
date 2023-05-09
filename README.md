@@ -1,5 +1,7 @@
 # kyc.mo
 
+v0.1.0
+
 ### Purpose
 
 This library provides an interface for calling icrc_17 KYC service providers.  It abstracts away the inner workings of KYC and lets Dapp developers focus on the results of the call.
